@@ -1,4 +1,4 @@
-# Caption Generator
+# Knowledge-Enhanced-Image-Captioning
 
 
 Below is a template for another sample project. Please follow this template.
