@@ -1,4 +1,4 @@
-# Caption to Story Generator
+# Caption Generator
 
 
 Below is a template for another sample project. Please follow this template.
