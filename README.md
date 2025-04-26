@@ -94,7 +94,7 @@ These modifications help the model retain and express real-world knowledge, achi
 ## How to Run the Code
 
 1. **Download the Images**
- * [COCO2014](https://github.com/ruotianluo/ImageCaptioning.pytorch/blob/master/data/README.md)
+ * [COCO2014](https://cocodataset.org/#download)
  * [KnowCap](https://drive.google.com/file/d/1DOk5WZZgHyO6tKT8A135hMgePid-akFq/view?usp=drive_link)
  * [Replay images selected from cc12m](https://drive.google.com/file/d/1tdVZ1rUpr5va-NwInMwBglRpSGOzUoMu/view?usp=drive_link)
  * [All](https://drive.google.com/drive/folders/1N4OPMabt1mM48yI3IjyPd_aDEku-osSZ?usp=drive_link)
