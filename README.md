@@ -105,7 +105,7 @@ prepro_data.py
 ```
 Alternatively, you can use the preprocessed [data](https://drive.google.com/drive/folders/1S-YYr8KrYkGOj_eKgSnS-wz8MEw5ACzt?usp=drive_link) and place it inside the `./data` directory.  
 Make sure to update the `file_path` entries in each json file to match the location of your downloaded images (Step 1).  
-Also, adjust the necessary parameters in `config.py` and other files based on your environment.
+Also, adjust the necessary parameters and thier paths  in `config.py` and all the other files based on your environment.
 
 3. **Download Pretrained OFA-Large**
 
