@@ -65,7 +65,7 @@ These modifications help the model retain and express real-world knowledge, achi
 - **Learning Rate Scheduler:** A strategy to adjust the learning rate during training to stabilize convergence and improve performance.
 
 
-### Problem Statements
+## Problem Statements
 - **Problem 1:** Existing image captioning models tend to produce generic captions that miss contextual and real-world knowledge.  
 - **Problem 2:** Vision-language pretraining (VLP) models struggle with zero-shot inference and often hallucinate knowledge.  
 - **Problem 3:** Fine-tuning VLP models introduces a generic bias that limits knowledge expression.  
@@ -78,13 +78,6 @@ These modifications help the model retain and express real-world knowledge, achi
 3. Use **cosine learning rate schedulers** for smoother convergence.
 
 ## Key Components
-- `ofa_large_caption/`: Contains code for training with OFA-Large base.
-- `scheduler.py`: Defines cosine learning rate scheduler.
-- `attention_module.py`: Implements self-attention on image patches.
-- `train.py`: Main training script with replay mechanism and loss functions.
-
-
-### Key Components
 - **`config.py`**: Contains configuration settings for training and evaluation.
 - **`data/`**: JSON files for COCO, CC12M, and KnowCap datasets used during training and testing.
 - **`data_load.py`**: Loads and preprocesses datasets for training and evaluation.
@@ -99,40 +92,6 @@ These modifications help the model retain and express real-world knowledge, achi
   - `eval.py`: Caption generation and metric calculation.
   - `import_models.py`, `log.py`, `loss.py`, `optimizer_tools.py`: Misc. training and logging support.
   - `prepro_data.py`: Dataset construction and formatting.
-
-## Training Algorithm
-The Enhanced K-Replay model is trained using a mix of standard and knowledge-guided samples. The key steps of the training process are:
-
-### 1. Input:
-- Mini-batch `b` sampled from:
-  - Standard image-caption pairs: `Sc`
-  - Knowledge-guided image-keyword pairs: `Sk`
-- Model: `M_theta`
-- Frozen reference model: `M_ref`
-- Loss weights: `lambda_k`, `lambda_d`
-
-### 2. Processing Each Sample:
-- **If the sample is from `Sc`:**
-  - Apply attention over image patches.
-  - Encode image and caption using `M_theta` to get prediction `z`.
-  - Compute text loss:  
-    `L_txt = CrossEntropy(z, t)`
-
-- **If the sample is from `Sk`:**
-  - Generate pseudo-caption `t_hat` using beam search (beam size = 5).
-  - Compute prediction `z = M_theta(i, t_hat)`.
-  - Get hidden states `z_ref = M_ref(i, t_hat)`.
-  - Compute keyword prediction loss:  
-    `L_kpred = MSE(z, k)`
-  - Compute distillation loss:  
-    `L_distill = KL(z, z_ref)`
-
-### 3. Total Loss:
-L_total = L_txt + lambda_k * L_kpred + lambda_d * L_distill
-
-### 4. Optimization:
-- Update model parameters `theta` using AdamW optimizer with a learning rate scheduler.
-
 
 ## How to Run the Code
 
@@ -185,7 +144,7 @@ shutil.copy(custom_file_path, destination_path)
     --method XEdistill > train_ofa_kreplay_scheduler_beam_attention.log 2>&1 &
 ```
 
-6. **Evaluate Model on COCO**
+6. **Evaluate Trained Model on COCO**
 ```bash
 !nohup bash -c 'CUDA_VISIBLE_DEVICES=0 python test.py \
     --model OFA \
@@ -195,7 +154,7 @@ shutil.copy(custom_file_path, destination_path)
     --step 4800 --length_penalty 1.0' > test_beam_attention_4800_COCO.log 2>&1 &
 
 ```
-7. **Evaluate Model on KnowCap**
+7. **Evaluate Trained Model on KnowCap**
 ```bash
 !nohup bash -c 'CUDA_VISIBLE_DEVICES=0 python test_knowcap.py \
     --model OFA \
@@ -212,13 +171,13 @@ shutil.copy(custom_file_path, destination_path)
 - **Recognition Accuracy (for Knowledge concepts)**
 
 ## Results on KnowCap (Highlights)
-| Technique           | CIDEr | Rec. Accuracy |
-|---------------------|-------|----------------|
-| OFA zero-shot       | 39.2  | 39.8%          |
-| OFA + K-Replay      | 90.3  | 50.4%          |
-| + Scheduler         | 92.6  | 54.2%          |
-| + Beam Search       | 92.6  | **63.3%**      |
-| + Attention         | 92.0  | 58.9%          |
+| Technique           | CIDEr   | Rec. Accuracy  |
+|---------------------|---------|----------------|
+| OFA zero-shot       | 39.2    | 39.8%          |
+| OFA + K-Replay      | 90.3    | 50.4%          |
+| + Scheduler         | 92.6    | 54.2%          |
+| + Beam Search       |**92.6** | **63.3%**      |
+| + Attention         | 92.0    | 58.9%          |
 
 ## Acknowledgments
 - Thanks to the KnowCap authors for open-sourcing their framework.
