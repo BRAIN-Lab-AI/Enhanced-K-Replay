@@ -853,7 +853,7 @@ class OFAEncoder(OFAPreTrainedModel):
         self.image_proj = Linear(1024, embed_dim)
         self.use_patch_self_attn = use_patch_self_attn
         if self.use_patch_self_attn:
-            print('Using Attention')
+            #print('Using Attention')
             self.patch_self_attn = nn.MultiheadAttention(embed_dim, num_heads=8, batch_first=True)
             self.patch_attn_ln = LayerNorm(embed_dim)
 
@@ -1181,7 +1181,7 @@ class OFAEncoder(OFAPreTrainedModel):
                 self.get_patch_images_info(patch_images, sample_patch_num, input_ids.device)
             # image_padding_mask[~patch_masks] = True # comment the line to temporarily fix the bug of mismatch
             if self.use_patch_self_attn:
-                print('Using Attention')
+                #print('Using Attention')
                 # image_embed shape: (B, L, D)
                 attn_output, _ = self.patch_self_attn(image_embed, image_embed, image_embed)
                 image_embed = self.patch_attn_ln(image_embed + attn_output)
