@@ -1,4 +1,3 @@
-# 在收集的rwcap数据集上进行测试
 
 import sys
 sys.path.append('/content/drive/My Drive/DL Project/KnowCap-master/')
@@ -18,7 +17,6 @@ from utils.import_models import construct_model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-# 为knowcap生成
 def cal_knowcap(model, global_step, mode='val', unseen=False):
     # 图片预处理
     if config.model == 'OFA':
@@ -60,7 +58,6 @@ def cal_knowcap(model, global_step, mode='val', unseen=False):
     knowcap_img_dir = config.knowcap240
     gen_pycoco = {}
 
-    # 每个类别的关键词，用于计算Recog_Acc
     categories_to_keywords = {'fifa world cup': ['fifa world cup', 'world cup'],
                               'captiol hill': ['u.s. capitol', 'captiol hill'], 'cadillac': ['cadillac'],
                               'oriental pearl': ['shanghai television', 'oriental pearl'],
@@ -202,7 +199,6 @@ def cal_knowcap(model, global_step, mode='val', unseen=False):
                               'cartier': ['cartier'], 'smoked salmon': ['smoked salmon']}
     num_pred = 0
 
-    # 为knowcap生成结果
     print("Test num: "+str(len(knowcap_data)))
     with torch.no_grad():
         for i, item in tqdm(enumerate(knowcap_data)):
@@ -241,10 +237,9 @@ def cal_knowcap(model, global_step, mode='val', unseen=False):
             v[0]["caption"] = caption_new
         json.dump(pycoco, open(gen_pycoco_path, 'w'))
 
-    # 计算标准指标
     gen_pycoco = json.load(open(gen_pycoco_path, 'r'))
     ref_pycoco = json.load(open(ref_pycoco_path, 'r'))
-    ref_pycoco = {int(k): v for k, v in ref_pycoco.items()}  # json读取时key类型为str，在计算SPICE时会出现问题
+    ref_pycoco = {int(k): v for k, v in ref_pycoco.items()}  
     gen_pycoco = {int(k): v for k, v in gen_pycoco.items()}
     cocoEval = COCOEvalCap('diy', 'diy')
     pycoco_results = cocoEval.evaluate_diy(ref_pycoco, gen_pycoco)
@@ -253,7 +248,6 @@ def cal_knowcap(model, global_step, mode='val', unseen=False):
         pycoco_results_return[k+'_knowcap'] = v
     print(pycoco_results)
 
-    # 计算概念覆盖度
     recog_acc = num_pred / len(knowcap_data)
     print(recog_acc)
     return pycoco_results_return, {"recog acc": recog_acc}
@@ -263,14 +257,7 @@ if __name__ == '__main__':
     # model
     model = construct_model(config).to(device)
 
-    if config.id == 'reemTest1':
-        print('reemTest')
-        #trained_model_path = '/content/drive/MyDrive/DL Project/KnowCap-master/checkpoints/ofa/log/ofa_kreplay/model/model_2500.pt'
-        trained_model_path = '/content/drive/MyDrive/DL Project/KnowCap-master/checkpoints/ofa/log/ofa_kreplay_Adapter_with_scheduler/model/model_1200.pt'
-        #trained_model_path = '/content/drive/MyDrive/DL Project/KnowCap-master/checkpoints/ofa/model_ofa_kreplay.pt'
-        print(trained_model_path)
-        model.load_state_dict(torch.load(trained_model_path))        
-    elif config.id != 'test':
+    if config.id != 'test':
         print('not test')
         log_path = config.log_dir.format(config.id)
         trained_model_path = log_path + '/model/model_' + str(config.step) + '.pt'
