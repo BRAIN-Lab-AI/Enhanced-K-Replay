@@ -1,5 +1,3 @@
-# Knowledge-Enhanced-Image-Captioning
-
 # [Enhanced K-Replay: Knowledge-Rich Image Captioning]  
 
 ## Introduction
