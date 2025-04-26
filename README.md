@@ -81,7 +81,7 @@ These modifications help the model retain and express real-world knowledge, achi
 - **`data_load.py`**: Loads and preprocesses datasets for training and evaluation.
 - **`test.py`**: Evaluation script for COCO dataset.
 - **`test_knowcap.py`**: Evaluation script for KnowCap dataset.
-- **`models/`**: Contains backbone models including OFA, BLIP, and GIT.
+- **`models/`**: Contains backbone OFA model.
 - **`train_multitask.py`**: Training script for the Enhanced K-Replay model.
 - **`utils/`**: Includes utilities such as:
   - `beamsearch.py`: Beam search decoding logic.
