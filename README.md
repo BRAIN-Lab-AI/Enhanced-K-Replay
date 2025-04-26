@@ -103,10 +103,6 @@ These modifications help the model retain and express real-world knowledge, achi
   - `prepro_data.py`: Dataset construction and formatting.
 
 ## Training Algorithm
-
-The Enhanced K-Replay model is trained using a mix of standard and knowledge-guided samples. The key steps of the training process are:
-## Training Algorithm
-
 The Enhanced K-Replay model is trained using a mix of standard and knowledge-guided samples. The key steps of the training process are:
 
 ### 1. Input:
@@ -148,7 +144,7 @@ L_total = L_txt + lambda_k * L_kpred + lambda_d * L_distill
  * [Replay images selected from cc12m](https://drive.google.com/file/d/1tdVZ1rUpr5va-NwInMwBglRpSGOzUoMu/view?usp=drive_link)
  * [All] (https://drive.google.com/drive/folders/1N4OPMabt1mM48yI3IjyPd_aDEku-osSZ?usp=drive_link)
 
-2. **Prepare Data for Training, Validation , and Testing**
+2. **Prepare Data for Training, Validation, and Testing**
 ```bash
 prepro_data.py
 ```
@@ -170,29 +166,54 @@ Follow the original instructions to prepare the checkpoints for VLP models (e.g.
 
 Alternatively, you can directly use the converted OFA-large [checkpoints](https://drive.google.com/drive/folders/1buhYbULgAXwYo_Nkaf9zBuNaUvvT3U9E?usp=drive_link) and finetuned OFA-large-caption [checkpoints](https://drive.google.com/file/d/1QQZ9eyO63JBBtyK5YIKA4CJ3jjAPuhQM/view?usp=drive_link) we provide.
 
-4. ** Replace the original `pycocoevalcap/eval.py` with `eval.py`**
+4. **Replace the original pycocoevalcap/eval.py` with eval.py**
 ```bash
 import shutil
 custom_file_path = '/content/drive/My Drive/DL Project/KnowCap-master/eval.py'  # Path to your custom eval.py file
 destination_path = '/usr/local/lib/python3.11/dist-packages/pycocoevalcap/eval.py'  # Path where you want to copy the custom file
 shutil.copy(custom_file_path, destination_path)
 ```
-5. **Train the Enhanced KnowCap Model**
+5. **Train the Enhanced K-Replay Model**
 ```bash
-python train.py   --model ofa_large   --scheduler cosine   --beam_size 5   --use_attention True   --replay_data path/to/cc12m_replay.json   --train_data path/to/coco_train.json
+!nohup python train_multitask_beam.py --mode train \
+    --model OFA --id ofa_kreplay_with_scheduler_beam_attention --batch_size 8 --epochs 10 \
+    --learning_rate 7e-6 --label_smoothing 0.1 \
+    --multitask_weight 1.0 --KD_temperature 16.0 \
+    --knowdistill_weight 1.0 --save_model_freq 100 \
+    --ofa_ckpts "/content/drive/MyDrive/DL Project/KnowCap-master/checkpoints/ofa/OFA-large-caption-trainedenc" \
+    --ofa_ckpts_distill "/content/drive/MyDrive/DL Project/KnowCap-master/checkpoints/ofa/OFA-large-caption-XEfinetuned" \
+    --train_mix "/content/drive/My Drive/DL Project/KnowCap-master/data/train_mix_32000.json" \
+    --use_patch_self_attn\
+    --method XEdistill > train_ofa_kreplay_scheduler_beam_attention.log 2>&1 &
 ```
 
-6. **Evaluate Model**
+6. **Evaluate Model on COCO**
 ```bash
-python evaluate.py --checkpoint path/to/model.pt --dataset knowcap
-```
+!nohup bash -c 'CUDA_VISIBLE_DEVICES=0 python test.py \
+    --model OFA \
+    --id ofa_kreplay_with_scheduler_beam_attention \
+    --trained_ckpts "/content/drive/MyDrive/DL Project/KnowCap-master/checkpoints/ofa/log/ofa_kreplay_with_scheduler_beam_attention/model/model_4800.pt" \
+    --use_patch_self_attn\
+    --step 4800 --length_penalty 1.0' > test_beam_attention_4800_COCO.log 2>&1 &
 
+```
+7. **Evaluate Model on KnowCap**
+```bash
+!nohup bash -c 'CUDA_VISIBLE_DEVICES=0 python test_knowcap.py \
+    --model OFA \
+    --id ofa_kreplay_with_scheduler_beam_attention \
+    --trained_ckpts "/content/drive/MyDrive/DL Project/KnowCap-master/checkpoints/ofa/log/ofa_kreplay_with_scheduler_beam_attention/model/model_4800.pt" \
+    --use_patch_self_attn\
+    --step 4800 --length_penalty 1.0' > test_beam_attention_4800_knowcap.log 2>&1 &
+```
 ## Evaluation Metrics
 - **CIDEr**
-- **BLEU / ROUGE / METEOR**
+- **BLEU**
+- **ROUGE**
+- **METEOR**
 - **Recognition Accuracy (for Knowledge concepts)**
 
-## Results (Highlights)
+## Results on KnowCap (Highlights)
 | Technique           | CIDEr | Rec. Accuracy |
 |---------------------|-------|----------------|
 | OFA zero-shot       | 39.2  | 39.8%          |
