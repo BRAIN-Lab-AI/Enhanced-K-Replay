@@ -1,8 +1,6 @@
 # Knowledge-Enhanced-Image-Captioning
 
-
-Below is a template for another sample project. Please follow this template.
-# [Deep Learning Project Template] Enhanced K-Replay: Knowledge-Rich Image Captioning 
+# [Enhanced K-Replay: Knowledge-Rich Image Captioning]  
 
 ## Introduction
 Enhanced K-Replay is an advanced deep learning model that addresses the challenge of generating accurate and knowledge-rich image captions. It enhances the K-Replay framework by integrating:
