@@ -140,7 +140,7 @@ L_total = L_txt + lambda_k * L_kpred + lambda_d * L_distill
  * [COCO2014](https://github.com/ruotianluo/ImageCaptioning.pytorch/blob/master/data/README.md)
  * [KnowCap](https://drive.google.com/file/d/1DOk5WZZgHyO6tKT8A135hMgePid-akFq/view?usp=drive_link)
  * [Replay images selected from cc12m](https://drive.google.com/file/d/1tdVZ1rUpr5va-NwInMwBglRpSGOzUoMu/view?usp=drive_link)
- * [All] (https://drive.google.com/drive/folders/1N4OPMabt1mM48yI3IjyPd_aDEku-osSZ?usp=drive_link)
+ * [All](https://drive.google.com/drive/folders/1N4OPMabt1mM48yI3IjyPd_aDEku-osSZ?usp=drive_link)
 
 2. **Prepare Data for Training, Validation, and Testing**
 ```bash
@@ -162,7 +162,7 @@ Follow the original instructions to prepare the checkpoints for VLP models (e.g.
 ``` 
 2. Due to [known issues](https://github.com/OFA-Sys/OFA/issues/296) with these checkpoints, convert them using `convert_ofa.py` to align with the official Fairseq parameters.
 
-Alternatively, you can directly use the converted OFA-large [checkpoints](https://drive.google.com/drive/folders/1buhYbULgAXwYo_Nkaf9zBuNaUvvT3U9E?usp=drive_link) and finetuned OFA-large-caption [checkpoints](https://drive.google.com/file/d/1QQZ9eyO63JBBtyK5YIKA4CJ3jjAPuhQM/view?usp=drive_link) we provide.
+Alternatively, you can directly use the converted [OFA-large checkpoints](https://drive.google.com/drive/folders/1buhYbULgAXwYo_Nkaf9zBuNaUvvT3U9E?usp=drive_link) and finetuned [OFA-large-caption checkpoints](https://drive.google.com/file/d/1QQZ9eyO63JBBtyK5YIKA4CJ3jjAPuhQM/view?usp=drive_link) we provide.
 
 4. **Replace the original pycocoevalcap/eval.py` with eval.py**
 ```bash
