@@ -148,21 +148,35 @@ L_total = L_txt + lambda_k * L_kpred + lambda_d * L_distill
  * [Replay images selected from cc12m](https://drive.google.com/file/d/1tdVZ1rUpr5va-NwInMwBglRpSGOzUoMu/view?usp=drive_link)
  * [All] (https://drive.google.com/drive/folders/1N4OPMabt1mM48yI3IjyPd_aDEku-osSZ?usp=drive_link)
 
-2. **Set Up Environment**
+2. **Prepare Data for Training, Validation , and Testing**
 ```bash
-conda create -n knowcap python=3.8
-conda activate knowcap
-pip install -r requirements.txt
+prepro_data.py
 ```
+Alternatively, you can use the preprocessed [data]([https://drive.google.com/file/d/1DBdnqcH_lOm--t5pZOlac1j1my4kVgrP/view?usp=drive_link](https://drive.google.com/drive/folders/1S-YYr8KrYkGOj_eKgSnS-wz8MEw5ACzt?usp=drive_link) and place it inside the `./data` directory.  
+Make sure to update the `file_path` entries in each dataset file to match the location of your downloaded images (Step 1).  
+Also, adjust the necessary parameters in `config.py` based on your environment.
 
 3. **Download Pretrained OFA-Large**
+
+Follow the original instructions to prepare the checkpoints for VLP models (e.g., OFA):
+
+1. Download the Transformers version of OFA-large and OFA-large-caption.
 ```bash
-wget https://ofa-models.s3.amazonaws.com/ofa_large.pt
+!git clone --single-branch --branch feature/add_transformers https://github.com/OFA-Sys/OFA.git
+!git clone https://huggingface.co/OFA-Sys/OFA-large-caption
+!git clone https://huggingface.co/OFA-Sys/OFA-large
+``` 
+2. Due to [known issues](https://github.com/OFA-Sys/OFA/issues/296) with these checkpoints, convert them using `convert_ofa.py` to align with the official Fairseq parameters.
+
+Alternatively, you can directly use the converted OFA-large [checkpoints](https://drive.google.com/drive/folders/1buhYbULgAXwYo_Nkaf9zBuNaUvvT3U9E?usp=drive_link) and finetuned OFA-large-caption [checkpoints](https://drive.google.com/file/d/1QQZ9eyO63JBBtyK5YIKA4CJ3jjAPuhQM/view?usp=drive_link) we provide.
+
+4. ** Replace the original `pycocoevalcap/eval.py` with `eval.py`**
+```bash
+import shutil
+custom_file_path = '/content/drive/My Drive/DL Project/KnowCap-master/eval.py'  # Path to your custom eval.py file
+destination_path = '/usr/local/lib/python3.11/dist-packages/pycocoevalcap/eval.py'  # Path where you want to copy the custom file
+shutil.copy(custom_file_path, destination_path)
 ```
-
-4. **Prepare Datasets**
-Ensure datasets are downloaded and formatted into the `pycocoevalcap` format. Custom replay data can be generated via the `scripts/prepare_replay.py`.
-
 5. **Train the Enhanced KnowCap Model**
 ```bash
 python train.py   --model ofa_large   --scheduler cosine   --beam_size 5   --use_attention True   --replay_data path/to/cc12m_replay.json   --train_data path/to/coco_train.json
