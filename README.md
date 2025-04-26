@@ -169,13 +169,14 @@ shutil.copy(custom_file_path, destination_path)
 - **Recognition Accuracy (for Knowledge concepts)**
 
 ## Results on KnowCap (Highlights)
-| Technique           | CIDEr   | Rec. Accuracy  |
-|---------------------|---------|----------------|
-| OFA zero-shot       | 39.2    | 39.8%          |
-| OFA + K-Replay      | 90.3    | 50.4%          |
-| + Scheduler         | 92.6    | 54.2%          |
-| + Beam Search       |**92.6** | **63.3%**      |
-| + Attention         | 92.0    | 58.9%          |
+| Method           | C    | RA     |
+|------------------|------|--------|
+| OFA zero-shot    | 39.2 | 39.80% |
+| OFA-Finetuned    | 41.7 | 38.50% |
+| +K-Replay        | 90.3 | 50.40% |
+| +Scheduler       | 92.6 | 54.20% |
+| +Beam            | 92.6 | 63.30% |
+| +Attention       | 92.0 | 58.90% |
 
 ## Acknowledgments
 - Thanks to the KnowCap authors for open-sourcing their framework.
