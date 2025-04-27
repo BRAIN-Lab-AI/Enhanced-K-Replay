@@ -1,5 +1,7 @@
 # Enhanced K-Replay: Knowledge-Rich Image Captioning
 
+![Alt text](output results.png)
+
 ## Introduction
 Enhanced K-Replay is an advanced deep learning model that addresses the challenge of generating accurate and knowledge-rich image captions. It enhances the K-Replay framework by integrating:
 - **Beam search decoding** for generating diverse and accurate pseudo-captions,
